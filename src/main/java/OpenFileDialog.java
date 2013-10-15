@@ -57,10 +57,10 @@ public class OpenFileDialog extends JPanel
         if (e.getSource() == openButton) {
             int returnVal = fc.showOpenDialog(OpenFileDialog.this);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(OpenFileDialog.this) == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 //this is where a real application would open the file
-                log.append("opening: " + file.getName() + "." + newLine);
+                logBoxAppend("opening: ", file.getName(), "." );
                 try {
                     tableParser.tableParser(file.getPath());
                     log.append("File processed." + file.getPath() + ".xls" + newLine);
@@ -73,6 +73,13 @@ public class OpenFileDialog extends JPanel
             }
             log.setCaretPosition(log.getDocument().getLength());
         }
+    }
+
+    public void logBoxAppend(Object ... items){
+        StringBuilder builder = new StringBuilder();
+        for( Object item : items ) builder.append(item.toString());
+        builder.append("\n");
+        log.append(builder.toString());
     }
 
     public static void main(String[] args) {
@@ -89,7 +96,7 @@ public class OpenFileDialog extends JPanel
     private static void createAndShowGUI() {
         //To change body of created methods use File | Settings | File Templates.
         JFrame frame = new JFrame("OpenFileDialog");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // add content
         frame.add(new OpenFileDialog());
