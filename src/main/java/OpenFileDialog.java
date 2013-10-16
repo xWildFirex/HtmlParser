@@ -5,34 +5,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: korbut-ve
- * Date: 30.09.13
- * Time: 9:46
- * To change this template use File | Settings | File Templates.
- */
 public class OpenFileDialog extends JPanel
                             implements ActionListener {
     static private final String newLine = "\n";
-    JButton openButton;
-    JTextArea log;
-    JFileChooser fc;
+    private JButton openButton;
+    private JTextArea logTextArea;
+    private JFileChooser fileChoser;
     private String fileName;
-    TableParser tableParser;
+    private List<DataItem> data;
 
     public OpenFileDialog() {
         super(new BorderLayout());
 
-        log = new JTextArea(5, 20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        JScrollPane logScrollPane = new JScrollPane(log);
+        logTextArea = new JTextArea(5, 20);
+        logTextArea.setMargin(new Insets(5, 5, 5, 5));
+        logTextArea.setEditable(false);
+        JScrollPane logScrollPane = new JScrollPane(logTextArea);
 
-        //create a file chooser
-        fc = new JFileChooser();
-        tableParser = new TableParser();
+        fileChoser = new JFileChooser();
         openButton = new JButton("Open a File...");
         openButton.addActionListener(this);
 
@@ -55,23 +47,24 @@ public class OpenFileDialog extends JPanel
 
         //Handle open button action
         if (e.getSource() == openButton) {
-            int returnVal = fc.showOpenDialog(OpenFileDialog.this);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
+
+            if (fileChoser.showOpenDialog(OpenFileDialog.this) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChoser.getSelectedFile();
                 //this is where a real application would open the file
-                log.append("opening: " + file.getName() + "." + newLine);
+                logTextArea.append("opening: " + file.getName() + "." + newLine);
                 try {
-                    tableParser.tableParser(file.getPath());
-                    log.append("File processed." + file.getPath() + ".xls" + newLine);
+                    data = TableParser.parseFile(file.getPath());
+                    new WriteToFile(data).write(new File(file.getPath()+ ".xls"));
+                    logTextArea.append("File processed." + file.getPath() + ".xls" + newLine);
                 } catch (IOException e1) {
-                    log.append("Exception in tableParser method" + newLine);
+                    logTextArea.append("Exception in parseFile method" + newLine);
                 }
 
             } else {
-                log.append("Open command cancelled by user. " + newLine);
+                logTextArea.append("Open command cancelled by user. " + newLine);
             }
-            log.setCaretPosition(log.getDocument().getLength());
+            logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
         }
     }
 
@@ -87,11 +80,11 @@ public class OpenFileDialog extends JPanel
 
 
     private static void createAndShowGUI() {
-        //To change body of created methods use File | Settings | File Templates.
-        JFrame frame = new JFrame("OpenFileDialog");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // add content
+        JFrame frame = new JFrame("OpenFileDialog");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+
         frame.add(new OpenFileDialog());
 
         frame.pack();

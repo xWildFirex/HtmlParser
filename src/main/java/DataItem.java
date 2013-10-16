@@ -1,10 +1,4 @@
-/**
- * Created with IntelliJ IDEA.
- * User: korbut-ve
- * Date: 03.10.13
- * Time: 10:44
- * To change this template use File | Settings | File Templates.
- */
+
 public class DataItem {
 
     private String telephoneNumber;
@@ -12,6 +6,10 @@ public class DataItem {
     private String callNumber;
     private String callTown;
     private String callDuration;
+
+    DataItem(){
+
+    }
 
     DataItem(String telephoneNumber, String conversationDate, String callNumber, String callTown, String callDuration) {
         this.telephoneNumber = telephoneNumber;
