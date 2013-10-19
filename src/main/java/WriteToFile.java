@@ -4,7 +4,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -21,19 +20,7 @@ public class WriteToFile {
     WriteToFile(List<DataItem> data) {
         this.workbook = new HSSFWorkbook();
         this.workSheet = workbook.createSheet("worksheet");
-        for (DataItem dataItem : data){
-            createRow();
-            cell = row.createCell(1);
-            cell.setCellValue(dataItem.getTelephoneNumber());
-            cell = row.createCell(2);
-            cell.setCellValue(dataItem.getConversationDate());
-            cell = row.createCell(3);
-            cell.setCellValue(dataItem.getCallNumber());
-            cell = row.createCell(4);
-            cell.setCellValue(dataItem.getCallTown());
-            cell = row.createCell(5);
-            cell.setCellValue(dataItem.getCallDuration());
-        }
+        setData(data);
     }
 
     public void createRow(){
@@ -41,16 +28,9 @@ public class WriteToFile {
         rowNumber++;
     }
 
-    public void addCell(String dataCell) {
-
-    }
-
-    public void setData (List<DataItem> dataItemList) {
+    private void setData (List<DataItem> dataItemList) {
         for (DataItem dataItem : dataItemList){
             createRow();
-            addCell(dataItem.getTelephoneNumber());
-            addCell(dataItem.getConversationDate());
-
             cell = row.createCell(1);
             cell.setCellValue(dataItem.getTelephoneNumber());
             cell = row.createCell(2);
@@ -64,14 +44,15 @@ public class WriteToFile {
         }
     }
 
-    public void write(File fileName){
+    public void write(File fileName) throws IOException {
+        FileOutputStream file = new FileOutputStream(fileName);
         try {
-            FileOutputStream file = new FileOutputStream(fileName);
             workbook.write(file);
-            file.flush();
             file.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            file.close();
         }
     }
 
