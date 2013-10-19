@@ -9,12 +9,10 @@ import java.util.List;
 
 public class OpenFileDialog extends JPanel
                             implements ActionListener {
-    static private final String newLine = "\n";
+
     private JButton openButton;
     private JTextArea logTextArea;
-    private JFileChooser fileChoser;
-    private String fileName;
-    private List<DataItem> data;
+    private JFileChooser fileChooser;
 
     public OpenFileDialog() {
         super(new BorderLayout());
@@ -24,7 +22,7 @@ public class OpenFileDialog extends JPanel
         logTextArea.setEditable(false);
         JScrollPane logScrollPane = new JScrollPane(logTextArea);
 
-        fileChoser = new JFileChooser();
+        fileChooser = new JFileChooser();
         openButton = new JButton("Open a File...");
         openButton.addActionListener(this);
 
@@ -35,37 +33,32 @@ public class OpenFileDialog extends JPanel
         add(logScrollPane, BorderLayout.CENTER);
     }
 
-    public String getFileName() {
-        return this.fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public void actionPerformed(ActionEvent e){
-
-        //Handle open button action
+        List<DataItem> data;
         if (e.getSource() == openButton) {
 
-
-            if (fileChoser.showOpenDialog(OpenFileDialog.this) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChoser.getSelectedFile();
-                //this is where a real application would open the file
-                logTextArea.append("opening: " + file.getName() + "." + newLine);
+            if (fileChooser.showOpenDialog(OpenFileDialog.this) == JFileChooser.APPROVE_OPTION) {
+                File inpuFile = fileChooser.getSelectedFile();
+                logBoxAppend("opening: ", inpuFile.getName());
                 try {
-                    data = TableParser.parseFile(file.getPath());
-                    new WriteToFile(data).write(new File(file.getPath()+ ".xls"));
-                    logTextArea.append("File processed." + file.getPath() + ".xls" + newLine);
+                    data = TableParser.parseFile(inpuFile.getPath());
+                    new WriteToFile(data).write(new File(inpuFile.getPath()+ ".xls"));
+                    logBoxAppend("File processed.", inpuFile.getPath(), ".xls");
                 } catch (IOException e1) {
-                    logTextArea.append("Exception in parseFile method" + newLine);
+                    logBoxAppend("Exception in parseFile method");
                 }
-
             } else {
-                logTextArea.append("Open command cancelled by user. " + newLine);
+                logBoxAppend("Open command cancelled by user.");
             }
             logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
         }
+    }
+
+    public void logBoxAppend(Object ... items){
+            StringBuilder builder = new StringBuilder();
+            for( Object item : items ) builder.append(item.toString());
+            builder.append("\n");
+           logTextArea.append(builder.toString());
     }
 
     public static void main(String[] args) {
@@ -77,18 +70,12 @@ public class OpenFileDialog extends JPanel
         });
     }
 
-
-
     private static void createAndShowGUI() {
 
         JFrame frame = new JFrame("OpenFileDialog");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-
         frame.add(new OpenFileDialog());
-
         frame.pack();
         frame.setVisible(true);
     }
-
 }
