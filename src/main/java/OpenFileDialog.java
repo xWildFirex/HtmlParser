@@ -1,14 +1,13 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+
 
 public class OpenFileDialog extends JPanel
-                            implements ActionListener {
+        implements ActionListener {
 
     private JButton openButton;
     private JTextArea logTextArea;
@@ -33,17 +32,13 @@ public class OpenFileDialog extends JPanel
         add(logScrollPane, BorderLayout.CENTER);
     }
 
-    public void actionPerformed(ActionEvent e){
-        List<DataItem> data;
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == openButton) {
-
             if (fileChooser.showOpenDialog(OpenFileDialog.this) == JFileChooser.APPROVE_OPTION) {
-                File inpuFile = fileChooser.getSelectedFile();
-                logBoxAppend("opening: ", inpuFile.getName());
+                File inputFile = fileChooser.getSelectedFile();
+                logBoxAppend("opening: ", inputFile.getName());
                 try {
-                    data = TableParser.parseFile(inpuFile.getPath());
-                    new WriteToFile(data).write(new File(inpuFile.getPath()+ ".xls"));
-                    logBoxAppend("File processed.", inpuFile.getPath(), ".xls");
+                    readAndParseFile(inputFile);
                 } catch (IOException e1) {
                     logBoxAppend("Exception in parseFile method");
                 }
@@ -54,28 +49,19 @@ public class OpenFileDialog extends JPanel
         }
     }
 
-    public void logBoxAppend(Object ... items){
-            StringBuilder builder = new StringBuilder();
-            for( Object item : items ) builder.append(item.toString());
-            builder.append("\n");
-           logTextArea.append(builder.toString());
+    private void readAndParseFile(File inputFile) throws IOException {
+        java.util.List<DataItem> data = TableParser.parseFile(inputFile.getPath());
+        new WriteToFile(data).write(new File(inputFile.getPath() + ".xls"));
+        logBoxAppend("File processed.", inputFile.getPath(), ".xls");
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                UIManager.put("swing.boldMetal", Boolean.FALSE);
-                createAndShowGUI();
-            }
-        });
+    public void logBoxAppend(Object... items) {
+        StringBuilder builder = new StringBuilder();
+        for (Object item : items) builder.append(item.toString());
+        builder.append("\n");
+        logTextArea.append(builder.toString());
     }
 
-    private static void createAndShowGUI() {
 
-        JFrame frame = new JFrame("OpenFileDialog");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.add(new OpenFileDialog());
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
+

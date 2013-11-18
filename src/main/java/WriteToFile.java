@@ -13,8 +13,6 @@ public class WriteToFile {
 
     public HSSFWorkbook workbook;
     public HSSFSheet workSheet;
-    public HSSFRow row;
-    public HSSFCell cell;
     public Integer rowNumber = 0;
 
     WriteToFile(List<DataItem> data) {
@@ -23,15 +21,16 @@ public class WriteToFile {
         setData(data);
     }
 
-    public void createRow(){
-        row = workSheet.createRow(rowNumber);
+    public HSSFRow createRow(){
+        HSSFRow row = workSheet.createRow(rowNumber);
         rowNumber++;
+        return row;
     }
 
     private void setData (List<DataItem> dataItemList) {
         for (DataItem dataItem : dataItemList){
-            createRow();
-            cell = row.createCell(1);
+            HSSFRow row = createRow();
+            HSSFCell cell = row.createCell(1);
             cell.setCellValue(dataItem.getTelephoneNumber());
             cell = row.createCell(2);
             cell.setCellValue(dataItem.getConversationDate());

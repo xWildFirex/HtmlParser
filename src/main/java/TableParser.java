@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableParser {
-    private static Integer START_ROW = 17;
-    private static Integer TELEPHONE_NUMBER_FIELD = 0;
-    private static Integer CONVERSATION_DATE_FIELD = 1;
-    private static Integer CALL_NUMBER_FIELD = 2;
-    private static Integer CALL_TOWN_FIELD = 3;
-    private static Integer CALL_DURATION_FIELD = 4;
+    private final static Integer START_ROW = 17;
+    private final static Integer TELEPHONE_NUMBER_FIELD = 0;
+    private final static Integer CONVERSATION_DATE_FIELD = 1;
+    private final static Integer CALL_NUMBER_FIELD = 2;
+    private final static Integer CALL_TOWN_FIELD = 3;
+    private final static Integer CALL_DURATION_FIELD = 4;
 
     public static List<DataItem> parseFile(String fileName) throws IOException {
 
