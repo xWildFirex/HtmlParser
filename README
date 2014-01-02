@@ -1,6 +1,5 @@
-This file was created by IntelliJ IDEA 12.1.4 for binding GitHub repository
+HTML parser for table with data. Save to XLS.
 
-Программа должна переносить полезную информацию из HTM файла в Excel файл.
-переносятся только данные, без заголовком столбцов.
+Programm should transfer data from HTM file to Excel file.
 
-Для парсинга html использую jsoup и poi - работы с Excel.
+For parse HTML using Jsoup. And POI to transfer to Excel
